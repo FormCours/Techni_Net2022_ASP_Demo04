@@ -27,15 +27,59 @@ namespace Demo_ASP_MVC_Modele.DAL.Repositories
             cmd.Parameters.Add(param);
         }
 
+        protected GameEntity Convert(IDataRecord record)
+        {
+            return new GameEntity
+            {
+                Id = (int)record["Id"],
+                Name = (string)record["Name"],
+                Description = (string)record["Description"],
+                IsCoop = (bool)record["Coop"],
+                NbPlayerMin = (int)record["Nb_player_min"],
+                NbPlayerMax = (int)record["Nb_player_max"],
+                Age = (int)record["age"]
+
+            };
+        }
+
         #region CRUD
         public IEnumerable<GameEntity> GetAll()
         {
-            throw new NotImplementedException();
+            using (IDbCommand cmd = _Connection.CreateCommand())
+            {
+                cmd.CommandText = "SELECT * FROM Game";
+
+                _Connection.Open();
+                using (IDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        yield return Convert(reader);
+                    }
+                }
+                _Connection.Close();
+
+            }
         }
 
         public GameEntity GetById(int id)
         {
-            throw new NotImplementedException();
+            using (IDbCommand cmd = _Connection.CreateCommand())
+            {
+                cmd.CommandText = "SELECT * FROM Game WHERE Id = @id";
+
+                AddParameter(cmd, "@id", id);
+
+                _Connection.Open();
+
+                using (IDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read()) return Convert(reader);
+                    throw new ArgumentNullException("Jeu inexistant");
+                }
+
+
+            }
         }
 
         public int Insert(GameEntity entity)
@@ -65,12 +109,41 @@ namespace Demo_ASP_MVC_Modele.DAL.Repositories
 
         public bool Update(GameEntity entity)
         {
-            throw new NotImplementedException();
+            using (IDbCommand cmd = _Connection.CreateCommand())
+            {
+               
+                cmd.CommandText = "UPDATE Game SET Name = @Name, " +
+                    "Description = @Desc, " +
+                    "Nb_player_min = @NbPlayerMin, " +
+                    "Nb_player_max = @NbPlayerMax, " +
+                    "Age = @Age, " +
+                    "Coop = @Coop " +
+                    "WHERE Id = @id";
+
+                AddParameter(cmd, "@id", entity.Id);
+                AddParameter(cmd, "@Name", entity.Name);
+                AddParameter(cmd, "@Desc", entity.Description);
+                AddParameter(cmd, "@NbPlayerMin", entity.NbPlayerMin);
+                AddParameter(cmd, "@NbPlayerMax", entity.NbPlayerMax);
+                AddParameter(cmd, "@Age", entity.Age);
+                AddParameter(cmd, "@Coop", entity.IsCoop);
+
+                _Connection.Open();
+                return cmd.ExecuteNonQuery() >= 1;
+            }
         }
 
         public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            using(IDbCommand cmd = _Connection.CreateCommand())
+            {
+                cmd.CommandText = "DELETE FROM Game WHERE Id = @id";
+                AddParameter(cmd, "@id", id);
+
+                _Connection.Open();
+                return cmd.ExecuteNonQuery() == 1;
+
+            }
         }
         #endregion
     }
