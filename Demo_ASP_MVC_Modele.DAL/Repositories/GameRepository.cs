@@ -33,11 +33,11 @@ namespace Demo_ASP_MVC_Modele.DAL.Repositories
             {
                 Id = (int)record["Id"],
                 Name = (string)record["Name"],
-                Description = (string)record["Description"],
+                Description = record["Description"] is DBNull ? null :  (string)record["Description"],
                 IsCoop = (bool)record["Coop"],
                 NbPlayerMin = (int)record["Nb_player_min"],
                 NbPlayerMax = (int)record["Nb_player_max"],
-                Age = (int)record["age"]
+                Age = record["Age"] is DBNull ? null : (int)record["Age"]
 
             };
         }
@@ -77,8 +77,6 @@ namespace Demo_ASP_MVC_Modele.DAL.Repositories
                     if (reader.Read()) return Convert(reader);
                     throw new ArgumentNullException("Jeu inexistant");
                 }
-
-
             }
         }
 
