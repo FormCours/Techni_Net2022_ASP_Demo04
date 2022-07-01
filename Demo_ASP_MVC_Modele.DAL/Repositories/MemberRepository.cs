@@ -11,7 +11,7 @@ namespace Demo_ASP_MVC_Modele.DAL.Repositories
 {
     public class MemberRepository : RepositoryBase<int, MemberEntity>, IMemberRepository
     {
-        public MemberRepository(IDbConnection connection) 
+        public MemberRepository(IDbConnection connection)
             : base(connection, "Member", "Id")
         { }
         protected override MemberEntity Convert(IDataRecord record)
@@ -21,7 +21,7 @@ namespace Demo_ASP_MVC_Modele.DAL.Repositories
                 Id = (int)record["Id"],
                 Pseudo = (string)record["Pseudo"],
                 Email = (string)record["Email"],
-                PwdHash = (string)record["Pwd_Hash"],
+                PwdHash = null
             };
         }
 
@@ -29,7 +29,7 @@ namespace Demo_ASP_MVC_Modele.DAL.Repositories
         {
             IDbCommand cmd = _Connection.CreateCommand();
 
-            cmd.CommandText= "INSERT INTO [Member]([Pseudo], [Email], [Pwd_Hash])"+
+            cmd.CommandText = "INSERT INTO [Member]([Pseudo], [Email], [Pwd_Hash])" +
                 " OUTPUT inserted.[Id]" +
                 " VALUES (@Pseudo, @Email, @PwdHash)";
 
@@ -47,6 +47,38 @@ namespace Demo_ASP_MVC_Modele.DAL.Repositories
         public override bool Update(MemberEntity entity)
         {
             throw new NotImplementedException();
+        }
+
+        public MemberEntity GetByPseudo(string pseudo)
+        {
+            using (IDbCommand cmd = _Connection.CreateCommand())
+            {
+                cmd.CommandText = $"SELECT * FROM {TableName} WHERE pseudo = @pseudo";
+                AddParameter(cmd, "@pseudo", pseudo);
+
+                _Connection.Open();
+                using (IDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                        return Convert(reader);
+                    return null;
+                }
+            }
+        }
+
+        public string GetHashByPseudo(string pseudo)
+        {
+            using (IDbCommand cmd = _Connection.CreateCommand())
+            {
+                cmd.CommandText = $"SELECT Pwd_Hash FROM {TableName} WHERE pseudo = @pseudo";
+                AddParameter(cmd, "@pseudo", pseudo);
+
+                _Connection.Open();
+                object result = cmd.ExecuteScalar();
+                _Connection.Close();
+
+                return result is DBNull ? null : (string)result;
+            }
         }
     }
 }

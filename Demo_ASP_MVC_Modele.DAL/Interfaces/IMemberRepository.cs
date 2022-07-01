@@ -9,5 +9,7 @@ namespace Demo_ASP_MVC_Modele.DAL.Interfaces
 {
     public interface IMemberRepository : IRepository<int, MemberEntity>
     {
+        string GetHashByPseudo(string pseudo);
+        MemberEntity GetByPseudo(string pseudo);
     }
 }

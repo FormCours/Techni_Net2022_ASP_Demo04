@@ -37,5 +37,29 @@ namespace Demo_ASP_MVC_Modele.BLL.Tools
                 NbPlayerMin = game.NbPlayerMin
             };
         }
+
+
+
+        public static MemberModel ToBll(this MemberEntity member)
+        {
+            return new MemberModel
+            {
+                Id = member.Id,
+                Email = member.Email,
+                Pseudo = member.Pseudo,
+                Pwd = null
+            };
+        }
+
+        public static MemberEntity ToDAL(this MemberModel member)
+        {
+            return new MemberEntity
+            {
+                Id = member.Id,
+                Email = member.Email,
+                Pseudo = member.Pseudo,
+                PwdHash = null
+            };
+        }
     }
 }
