@@ -10,24 +10,13 @@ using System.Threading.Tasks;
 
 namespace Demo_ASP_MVC_Modele.DAL.Repositories
 {
-    public class GameRepository : IGameRepository
+    public class GameRepository : RepositoryBase<int, GameEntity>, IGameRepository
     {
-        private IDbConnection _Connection;
-
         public GameRepository(IDbConnection connection)
-        {
-            _Connection = connection;
-        }
+            : base(connection, "Game", "Id")
+        { }
 
-        private void AddParameter(IDbCommand cmd, string name, object data)
-        {
-            IDbDataParameter param = cmd.CreateParameter();
-            param.ParameterName = name;
-            param.Value = data ?? DBNull.Value;
-            cmd.Parameters.Add(param);
-        }
-
-        protected GameEntity Convert(IDataRecord record)
+        protected override GameEntity Convert(IDataRecord record)
         {
             return new GameEntity
             {
@@ -38,49 +27,11 @@ namespace Demo_ASP_MVC_Modele.DAL.Repositories
                 NbPlayerMin = (int)record["Nb_player_min"],
                 NbPlayerMax = (int)record["Nb_player_max"],
                 Age = record["Age"] is DBNull ? null : (int)record["Age"]
-
             };
         }
 
         #region CRUD
-        public IEnumerable<GameEntity> GetAll()
-        {
-            using (IDbCommand cmd = _Connection.CreateCommand())
-            {
-                cmd.CommandText = "SELECT * FROM Game";
-
-                _Connection.Open();
-                using (IDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        yield return Convert(reader);
-                    }
-                }
-                _Connection.Close();
-
-            }
-        }
-
-        public GameEntity GetById(int id)
-        {
-            using (IDbCommand cmd = _Connection.CreateCommand())
-            {
-                cmd.CommandText = "SELECT * FROM Game WHERE Id = @id";
-
-                AddParameter(cmd, "@id", id);
-
-                _Connection.Open();
-
-                using (IDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read()) return Convert(reader);
-                    throw new ArgumentNullException("Jeu inexistant");
-                }
-            }
-        }
-
-        public int Insert(GameEntity entity)
+        public override int Insert(GameEntity entity)
         {
             // Créer la commande
             IDbCommand cmd = _Connection.CreateCommand();
@@ -105,7 +56,7 @@ namespace Demo_ASP_MVC_Modele.DAL.Repositories
             return id;
         }
 
-        public bool Update(GameEntity entity)
+        public override bool Update(GameEntity entity)
         {
             using (IDbCommand cmd = _Connection.CreateCommand())
             {
@@ -128,19 +79,6 @@ namespace Demo_ASP_MVC_Modele.DAL.Repositories
 
                 _Connection.Open();
                 return cmd.ExecuteNonQuery() == 1;
-            }
-        }
-
-        public bool Delete(int id)
-        {
-            using(IDbCommand cmd = _Connection.CreateCommand())
-            {
-                cmd.CommandText = "DELETE FROM Game WHERE Id = @id";
-                AddParameter(cmd, "@id", id);
-
-                _Connection.Open();
-                return cmd.ExecuteNonQuery() == 1;
-
             }
         }
         #endregion
