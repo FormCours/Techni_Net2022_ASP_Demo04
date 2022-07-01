@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Game.sql" />
+    <Build Include="Tables\Member.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Demo_ASP_MVC_Modele.Database.publish.xml" />
