@@ -5,6 +5,12 @@
 }
 
 <h1>Index</h1>
+@{
+    if(TempData["ErrorMessage"] != null)
+    {
+        <h4 class="text-danger">@TempData["ErrorMessage"]</h4>
+    }
+}
 
 <p>
     <a asp-action="Add">Create New</a>

@@ -127,7 +127,7 @@ namespace Demo_ASP_MVC_Modele.DAL.Repositories
                 AddParameter(cmd, "@Coop", entity.IsCoop);
 
                 _Connection.Open();
-                return cmd.ExecuteNonQuery() >= 1;
+                return cmd.ExecuteNonQuery() == 1;
             }
         }
 
