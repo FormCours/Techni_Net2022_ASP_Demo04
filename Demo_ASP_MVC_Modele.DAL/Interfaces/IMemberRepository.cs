@@ -11,5 +11,6 @@ namespace Demo_ASP_MVC_Modele.DAL.Interfaces
     {
         string GetHashByPseudo(string pseudo);
         MemberEntity GetByPseudo(string pseudo);
+        bool CheckUserExists(string email, string pseudo);
     }
 }

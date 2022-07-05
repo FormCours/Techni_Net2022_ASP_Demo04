@@ -1,4 +1,5 @@
 ﻿using Demo_ASP_MVC_Modele.BLL.Interfaces;
+using Demo_ASP_MVC_Modele.WebApp.Infrastructure;
 using Demo_ASP_MVC_Modele.WebApp.Models;
 using Demo_ASP_MVC_Modele.WebApp.Models.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +20,12 @@ namespace Demo_ASP_MVC_Modele.WebApp.Controllers
             return View(_service.GetAll().ToViewModel());
         }
 
+        [AuthRequired]
         public IActionResult Add()
         {
             return View(new GameForm());
         }
-
+        [AuthRequired]
         [HttpPost]
         public IActionResult Add([FromForm] GameForm gameForm)
         {
@@ -55,13 +57,13 @@ namespace Demo_ASP_MVC_Modele.WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
-
+        [AuthRequired]
         public IActionResult Delete([FromRoute] int id)
         {
             _service.Delete(id);
             return RedirectToAction(nameof(Index));
         }
-
+        [AuthRequired]
         public IActionResult Update([FromRoute]int id)
         {
             try

@@ -2,6 +2,7 @@
 using Demo_ASP_MVC_Modele.BLL.Interfaces;
 using Demo_ASP_MVC_Modele.BLL.Tools;
 using Demo_ASP_MVC_Modele.DAL.Entities;
+using Demo_ASP_MVC_Modele.DAL.Interfaces;
 using Demo_ASP_MVC_Modele.DAL.Repositories;
 using Isopoh.Cryptography.Argon2;
 using System;
@@ -14,17 +15,19 @@ namespace Demo_ASP_MVC_Modele.BLL.Services
 {
     public class MemberService : IMemberService
     {
-        MemberRepository _MemberRepository;
+        IMemberRepository _MemberRepository;
 
-        public MemberService(MemberRepository memberRepository)
+        public MemberService(IMemberRepository memberRepository)
         {
             _MemberRepository = memberRepository;
         }
 
         public MemberModel Register(MemberModel member)
         {
-            // TODO Check If Pseudo and email exists!
-            //      Return null / exception
+            if(_MemberRepository.CheckUserExists(member.Email, member.Pseudo))
+            {
+                throw new ArgumentException("Email ou pseudo déjà éxistant");
+            }
 
             // Hashage du mot de passe
             string pwdHash = Argon2.Hash(member.Pwd);
@@ -56,7 +59,7 @@ namespace Demo_ASP_MVC_Modele.BLL.Services
             }
             else
             {
-                return null; // Ou Exception
+                throw new Exception("Mot de passe incorrect");
             }
         }
     }

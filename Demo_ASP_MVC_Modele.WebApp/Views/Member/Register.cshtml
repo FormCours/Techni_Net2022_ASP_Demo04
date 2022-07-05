@@ -1,0 +1,51 @@
+﻿@model Demo_ASP_MVC_Modele.WebApp.Models.MemberRegForm
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Register</h1>
+
+<h4>MemberRegForm</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Register">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Pseudo" class="control-label"></label>
+                <input asp-for="Pseudo" class="form-control" />
+                <span asp-validation-for="Pseudo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pwd" class="control-label"></label>
+                <input asp-for="Pwd" class="form-control" />
+                <span asp-validation-for="Pwd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PwdRepeat" class="control-label"></label>
+                <input asp-for="PwdRepeat" class="form-control" />
+                <span asp-validation-for="PwdRepeat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+@if (!string.IsNullOrEmpty(ViewData["error"]?.ToString()))
+{
+    <p>@ViewData["error"]</p>
+}
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

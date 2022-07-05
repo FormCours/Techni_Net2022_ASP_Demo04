@@ -23,6 +23,17 @@ namespace Demo_ASP_MVC_Modele.DAL.Repositories
             ColumnIdName = columnIdName;
         }
 
+        public void ConnectionOpen()
+        {
+            if (_Connection.State == ConnectionState.Open)
+            {
+                _Connection.Close();
+
+            }
+            _Connection.Open();
+
+        }
+
         protected void AddParameter(IDbCommand cmd, string name, object data)
         {
             IDbDataParameter param = cmd.CreateParameter();
