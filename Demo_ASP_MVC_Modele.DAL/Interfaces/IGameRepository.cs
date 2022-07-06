@@ -10,5 +10,8 @@ namespace Demo_ASP_MVC_Modele.DAL.Interfaces
     public interface IGameRepository : IRepository<int, GameEntity>
     {
         // Pour ajouter des méthodes pour le type d'entity (GameEntity)
+
+        IEnumerable<GameEntity> GetByMemberId(int id);
+        bool AddFavoriteGame(int memberId, int gameId);
     }
 }

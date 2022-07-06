@@ -33,4 +33,9 @@ namespace Demo_ASP_MVC_Modele.WebApp.Models
         [DataType(DataType.Password)]
         public string Pwd { get; set; }
     }
+
+    public class MemberProfilView : Member
+    {
+        public IEnumerable<Game> FavoriteList { get; set; }
+    }
 }

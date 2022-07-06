@@ -10,5 +10,7 @@ namespace Demo_ASP_MVC_Modele.BLL.Interfaces
 {
     public interface IGameService : IRepository<int, GameModel>
     {
+        IEnumerable<GameModel> GetByMemberId(int id);
+        bool AddFavoriteGame(int memberId, int gameId);
     }
 }

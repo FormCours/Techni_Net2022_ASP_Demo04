@@ -10,11 +10,13 @@ namespace Demo_ASP_MVC_Modele.WebApp.Controllers
     {
         private IMemberService _service;
         private SessionManager _session;
+        private IGameService _gameService;
 
-        public MemberController(IMemberService service, SessionManager session)
+        public MemberController(IMemberService service, SessionManager session, IGameService gameService)
         {
             _service = service;
             _session = session;
+            _gameService = gameService;
         }
 
         public IActionResult Register()
@@ -71,6 +73,13 @@ namespace Demo_ASP_MVC_Modele.WebApp.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [AuthRequired]
+        public IActionResult Profil()
+        {
+            MemberProfilView model = _session.CurrentUser.ToView(_gameService);
+
+            return View(model);
+        }
 
     }
 }

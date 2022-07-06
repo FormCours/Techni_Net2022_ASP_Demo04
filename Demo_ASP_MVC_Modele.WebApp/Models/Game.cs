@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace Demo_ASP_MVC_Modele.WebApp.Models
 {
@@ -53,5 +54,11 @@ namespace Demo_ASP_MVC_Modele.WebApp.Models
         [DisplayName("Jeu cooperatif")]
         [Required]
         public bool IsCoop { get; set; }
+    }
+
+    public class FavoriteForm
+    {
+        public IEnumerable<Game> GameList { get; set; }
+        public int SelectedId { get; set; }
     }
 }

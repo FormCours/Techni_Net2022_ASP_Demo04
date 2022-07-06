@@ -9,10 +9,12 @@ namespace Demo_ASP_MVC_Modele.WebApp.Controllers
     public class GameController : Controller
     {
         private IGameService _service;
+        private SessionManager _session;
 
-        public GameController(IGameService service)
+        public GameController(IGameService service, SessionManager session)
         {
             _service = service;
+            _session = session;
         }
 
         public IActionResult Index()
@@ -115,6 +117,33 @@ namespace Demo_ASP_MVC_Modele.WebApp.Controllers
                 TempData["ErrorMessage"] = "Une erreur est survenu durant la mise à jour !!!";
                 return RedirectToAction(nameof(Index));
             }
+        }
+
+        [AuthRequired]
+        public IActionResult AddFav()
+        {
+            FavoriteForm form = new FavoriteForm();
+            form.GameList = _service.GetAll().Select(x => x.ToViewModel());
+
+            return View(form);
+        }
+
+        [HttpPost]
+        public IActionResult AddFav(FavoriteForm form)
+        {
+            try
+            {
+                _service.AddFavoriteGame(_session.CurrentUser.Id, form.SelectedId);
+
+                return RedirectToAction("Profil", "Member");
+            }
+            catch(Exception e)
+            {
+                ViewData["error"] = e.Message;
+                form.GameList = _service.GetAll().Select(x => x.ToViewModel());
+                return View(form);
+            }
+            
         }
 
     }

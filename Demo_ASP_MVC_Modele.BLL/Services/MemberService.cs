@@ -49,7 +49,7 @@ namespace Demo_ASP_MVC_Modele.BLL.Services
 
             if(string.IsNullOrWhiteSpace(hash))
             {
-                return null; // Ou Exception
+                throw new Exception("User inexistant");
             }
 
             // Validation du hash avec le password

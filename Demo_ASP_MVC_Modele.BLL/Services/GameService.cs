@@ -22,6 +22,12 @@ namespace Demo_ASP_MVC_Modele.BLL.Services
         {
             _repo = repo;
         }
+
+        public bool AddFavoriteGame(int memberId, int gameId)
+        {
+            return _repo.AddFavoriteGame(memberId, gameId);
+        }
+
         public bool Delete(int id)
         {
             return _repo.Delete(id);
@@ -37,6 +43,11 @@ namespace Demo_ASP_MVC_Modele.BLL.Services
             return _repo.GetById(id).ToBll();
         }
 
+        public IEnumerable<GameModel> GetByMemberId(int id)
+        {
+            return _repo.GetByMemberId(id).Select(x => x.ToBll());
+        }
+
         public int Insert(GameModel entity)
         {
             return _repo.Insert(entity.ToDAL());
@@ -47,5 +58,6 @@ namespace Demo_ASP_MVC_Modele.BLL.Services
             return _repo.Update(entity.ToDAL());
 
         }
+
     }
 }

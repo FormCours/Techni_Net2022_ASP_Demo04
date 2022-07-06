@@ -1,4 +1,5 @@
 ﻿using Demo_ASP_MVC_Modele.BLL.Entities;
+using Demo_ASP_MVC_Modele.BLL.Interfaces;
 
 namespace Demo_ASP_MVC_Modele.WebApp.Models.Mappers
 {
@@ -21,6 +22,17 @@ namespace Demo_ASP_MVC_Modele.WebApp.Models.Mappers
                 Id = m.Id,
                 Email = m.Email,
                 Pseudo = m.Pseudo
+            };
+        }
+
+        public static MemberProfilView ToView(this Member m, IGameService gameService)
+        {
+            return new MemberProfilView
+            {
+                Id = m.Id,
+                Email = m.Email,
+                Pseudo = m.Pseudo,
+                FavoriteList = gameService.GetByMemberId(m.Id).Select(x => x.ToViewModel())
             };
         }
     }

@@ -81,6 +81,40 @@ namespace Demo_ASP_MVC_Modele.DAL.Repositories
                 return cmd.ExecuteNonQuery() == 1;
             }
         }
+
+        public IEnumerable<GameEntity> GetByMemberId(int id)
+        {
+            using (IDbCommand cmd = _Connection.CreateCommand())
+            {
+                cmd.CommandText = "SELECT G.* FROM Game G JOIN Favorite F ON F.IdGame = G.Id WHERE F.IdMember = @Id";
+
+                AddParameter(cmd, "@Id", id);
+
+                ConnectionOpen();
+                using (IDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        yield return Convert(reader);
+                    }
+                }
+            }
+        }
+
+        public bool AddFavoriteGame(int memberId, int gameId)
+        {
+            using(IDbCommand cmd = _Connection.CreateCommand())
+            {
+                cmd.CommandText = "INSERT INTO Favorite (IdMember, IdGame) VALUES (@mid, @gid)";
+
+                AddParameter(cmd, "@mid", memberId);
+                AddParameter(cmd, "@gid", gameId);
+
+                ConnectionOpen();
+
+                return cmd.ExecuteNonQuery() == 1;
+            }
+        }
         #endregion
     }
 }
